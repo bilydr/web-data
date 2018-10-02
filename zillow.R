@@ -60,6 +60,5 @@ df <- tibble(
   url_details
 )
 
-glimpse(df)
-View(df)
-# write_excel_csv(df, "zillow.csv")
+print(df)
+write_excel_csv(df, paste0("zillow", Sys.Date(), ".csv"))

@@ -39,5 +39,4 @@ tags <- attractions %>%
   
 
 df <- tibble(id, title, score, n_review, tags)
-glimpse(df)
-View(df)
+print(df)

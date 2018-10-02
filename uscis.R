@@ -1,4 +1,5 @@
-# to scrape results from https://egov.uscis.gov/processing-times/
+# to record results from https://egov.uscis.gov/processing-times/
+library(tidyverse)
 library(jsonlite)
 library(lubridate)
 # find the API URL via Chrome Dev tools Network module
@@ -40,7 +41,8 @@ file_db <- "uscis_proc_time.csv"
 
 if (file.exists(file_db)) {
   df0 <- read_csv(file_db)
-  df <- bind_rows(df, df0)
+  df <- bind_rows(df, df0) %>%
+    distinct()
 }
 
 write_csv(df, file_db)
