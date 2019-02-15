@@ -1,8 +1,9 @@
+# example script to get data from Zillow
 library(tidyverse)
 library(rvest)
 
 # URL for Wayzata townhomes for sales
-url_zillow <- "https://www.zillow.com/homes/for_sale/Wayzata-MN/townhouse_type/"
+url_zillow <- "https://www.zillow.com/homes/for_sale/Wayzata-MN/townhouse_type/0_mmm/"
 page <- read_html(url_zillow)
 
 houses <- page %>%
@@ -27,15 +28,18 @@ params <- houses %>%
   strsplit("\u00b7")
 
 beds <- params %>%
+  map(str_subset, pattern = "bds") %>%
   map_chr(1) %>%
   parse_number()
 
 baths <- params %>%
-  map_chr(2) %>%
+  map(str_subset, pattern = "ba") %>%
+  map_chr(1) %>%
   parse_number()
 
 area_sqft <- params %>%
-  map_chr(3) %>%
+  map(str_subset, pattern = "sqft") %>%
+  map_chr(1) %>%
   parse_number()
 
 url_details <- houses %>%
@@ -49,7 +53,7 @@ dom <- houses %>%
   gsub("&nbsp", " ", .) %>%
   gsub(" on Zillow", "", .)
 
-df <- tibble(
+df_all <- tibble(
   z_id,
   address,
   beds,
@@ -60,5 +64,5 @@ df <- tibble(
   url_details
 )
 
-print(df)
-write_excel_csv(df, paste0("zillow", Sys.Date(), ".csv"))
+print(df_all)
+write_excel_csv(df_all, paste0("~/data/zillow/wayzata_", Sys.Date(), ".csv"))
